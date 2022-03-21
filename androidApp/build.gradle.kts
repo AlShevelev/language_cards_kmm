@@ -4,24 +4,48 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = AndroidConfigData.compileSdkVersion
     defaultConfig {
         applicationId = "com.shevelev.languagecards.android"
-        minSdk = 23
-        targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = AndroidConfigData.minSdkVersion
+        targetSdk = AndroidConfigData.targetSdkVersion
+        versionCode = AndroidConfigData.versionCode
+        versionName = AndroidConfigData.versionName
     }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.compose
+    }
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {
     implementation(project(":shared"))
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+
+    implementation(Dependencies.Android.appCompat)
+
+    implementation(Dependencies.Android.composeUi)
+    implementation(Dependencies.Android.composeMaterial)
+    implementation(Dependencies.Android.composeUiToolingPreview)
+    implementation(Dependencies.Android.lifecycleRuntimeKtx)
+    implementation(Dependencies.Android.activityCompose)
+    debugImplementation(Dependencies.Android.composeUiTooling)
 }
