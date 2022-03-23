@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("com.squareup.sqldelight")
 }
 
 kotlin {
@@ -17,13 +18,21 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation(Dependencies.Shared.Common.sqlDelight)
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting
+        val androidMain by getting {
+            dependencies {
+                implementation(Dependencies.Shared.Android.sqlDelight)
+            }
+        }
         val androidTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
@@ -33,6 +42,10 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+
+            dependencies {
+                implementation(Dependencies.Shared.IOS.sqlDelight)
+            }
         }
         val iosX64Test by getting
         val iosArm64Test by getting
@@ -52,5 +65,17 @@ android {
     defaultConfig {
         minSdk = AndroidConfigData.minSdkVersion
         targetSdk = AndroidConfigData.targetSdkVersion
+    }
+}
+
+sqldelight {
+    database("AppStorage") {
+        packageName = "com.shevelev.languagecards.data.appstorage.api"
+        sourceFolders = listOf("sqldelight/appstorage")
+    }
+
+    database("KeyValueStorage") {
+        packageName = "com.shevelev.languagecards.data.keyvaluestorage.api"
+        sourceFolders = listOf("sqldelight/keyvaluestorage")
     }
 }

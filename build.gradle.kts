@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath(BuildPlugins.kotlinGradle)
         classpath(BuildPlugins.gradle)
+        classpath(BuildPlugins.sqlDelight)
     }
 }
 
