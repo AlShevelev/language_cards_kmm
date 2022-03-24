@@ -69,13 +69,13 @@ android {
 }
 
 sqldelight {
-    database("AppStorage") {
-        packageName = "com.shevelev.languagecards.data.appstorage.api"
+    database("AppStorageDatabase") {
+        packageName = "com.shevelev.languagecards.data.api.appstorage"
         sourceFolders = listOf("sqldelight/appstorage")
     }
 
-    database("KeyValueStorage") {
-        packageName = "com.shevelev.languagecards.data.keyvaluestorage.api"
+    database("KeyValueStorageDatabase") {
+        packageName = "com.shevelev.languagecards.data.api.keyvaluestorage"
         sourceFolders = listOf("sqldelight/keyvaluestorage")
     }
 }
