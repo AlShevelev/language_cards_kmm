@@ -1,4 +1,4 @@
-package com.shevelev.languagecards.data.repository.utils
+package com.shevelev.languagecards.utils
 
 /**
  * A pure Kotlin implementation of the Murmur 2 hashing algorithm as presented

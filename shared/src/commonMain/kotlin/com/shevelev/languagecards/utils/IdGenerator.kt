@@ -1,4 +1,4 @@
-package com.shevelev.languagecards.data.repository.utils
+package com.shevelev.languagecards.utils
 
 import kotlin.random.Random
 

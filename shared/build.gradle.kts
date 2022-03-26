@@ -20,6 +20,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(Dependencies.Shared.Common.coroutines)
+
                 implementation(Dependencies.Shared.Common.sqlDelight)
             }
         }

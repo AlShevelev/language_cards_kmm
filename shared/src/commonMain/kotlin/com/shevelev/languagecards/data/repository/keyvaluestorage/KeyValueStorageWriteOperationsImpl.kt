@@ -2,7 +2,7 @@ package com.shevelev.languagecards.data.repository.keyvaluestorage
 
 import com.shevelev.keyvaluestorage.shared.facade.impl.Types
 import com.shevelev.languagecards.data.api.keyvaluestorage.KeyValueStorageQueries
-import com.shevelev.languagecards.data.repository.utils.IdGenerator
+import com.shevelev.languagecards.utils.IdGenerator
 
 /**
  * An implementation for updating data in a key-value storage that based on

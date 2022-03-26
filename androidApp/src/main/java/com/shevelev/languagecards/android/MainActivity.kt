@@ -2,12 +2,6 @@ package com.shevelev.languagecards.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.shevelev.languagecards.Greeting
-import android.widget.TextView
-
-fun greet(): String {
-    return Greeting().greeting()
-}
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

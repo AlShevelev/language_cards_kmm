@@ -2,7 +2,7 @@
 One card */
 CREATE TABLE card (
     card_id INTEGER AS Long NOT NULL PRIMARY KEY,
-    color INTEGER
+    color INTEGER AS Short
 );
 
 createCard:
@@ -21,16 +21,17 @@ A card's side */
 CREATE TABLE card_side (
     card_side_id INTEGER AS Long NOT NULL PRIMARY KEY,
     card_id INTEGER AS Long NOT NULL,
-    language_code TEXT NOT NULL
+    language_code INTEGER AS Short NOT NULL
 );
+
+CREATE INDEX card_side_link ON card_side(card_id);
 
 createCardSide:
 INSERT INTO card_side(card_side_id, card_id, language_code)
 VALUES (?, ?, ?);
 
-readAllCardSides:
-SELECT *  FROM card_side;
-
+readCardSide:
+SELECT *  FROM card_side WHERE card_id = ?;
 
 /**
 One element of content in a card's side
@@ -48,12 +49,14 @@ CREATE TABLE card_side_content_item (
     sort_order INTEGER AS Short NOT NULL
 );
 
+CREATE INDEX card_side_content_item_link ON card_side_content_item(card_side_id);
+
 createCardSideContentItem:
 INSERT INTO card_side_content_item(card_side_content_item_id, card_side_id, type, value, value_voicing, description, sort_order)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
-readAllCardSideContentItems:
-SELECT *  FROM card_side_content_item;
+readCardSideContentItems:
+SELECT *  FROM card_side_content_item WHERE card_side_id = ?;
 
 
 /**
