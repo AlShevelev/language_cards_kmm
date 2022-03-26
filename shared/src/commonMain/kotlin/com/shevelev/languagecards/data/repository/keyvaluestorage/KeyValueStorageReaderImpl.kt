@@ -2,6 +2,8 @@ package com.shevelev.languagecards.data.repository.keyvaluestorage
 
 import com.shevelev.keyvaluestorage.shared.facade.impl.Types
 import com.shevelev.languagecards.data.api.keyvaluestorage.KeyValueStorageQueries
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * An implementation for reading data from a key-value storage that based on
@@ -9,21 +11,22 @@ import com.shevelev.languagecards.data.api.keyvaluestorage.KeyValueStorageQuerie
  */
 class KeyValueStorageReaderImpl(
     private val dbQueries: KeyValueStorageQueries,
-    private val storageKey: String
+    private val storageKey: String,
+    private val ioDispatcher: CoroutineDispatcher
 ) : KeyValueStorageReader {
     /**
      * Get a boolean value from the storage by its key
      * @param key value's key
      * @return resulted value or null if the value has not been found
      */
-    override fun getBoolean(key: String): Boolean? = getValue(key, Types.BOOLEAN)?.toBoolean()
+    override suspend fun getBoolean(key: String): Boolean? = getValue(key, Types.BOOLEAN)?.toBoolean()
 
     /**
      * Get a list of boolean values from the storage by its key
      * @param key value's key
      * @return resulted list or null if the value has not been found
      */
-    override fun getBooleanList(key: String): List<Boolean>? =
+    override suspend fun getBooleanList(key: String): List<Boolean>? =
         getValuesList(key, Types.BOOLEAN)
             ?.map { it.toBoolean() }
 
@@ -32,14 +35,14 @@ class KeyValueStorageReaderImpl(
      * @param key value's key
      * @return resulted value or null if the value has not been found
      */
-    override fun getFloat(key: String): Float? = getValue(key, Types.FLOAT)?.toFloat()
+    override suspend fun getFloat(key: String): Float? = getValue(key, Types.FLOAT)?.toFloat()
 
     /**
      * Get a list of float values from the storage by its key
      * @param key value's key
      * @return resulted list or null if the value has not been found
      */
-    override fun getFloatList(key: String): List<Float>? =
+    override suspend fun getFloatList(key: String): List<Float>? =
         getValuesList(key, Types.FLOAT)
             ?.map { it.toFloat() }
 
@@ -48,14 +51,14 @@ class KeyValueStorageReaderImpl(
      * @param key value's key
      * @return resulted value or null if the value has not been found
      */
-    override fun getInt(key: String): Int? = getValue(key, Types.INTEGER)?.toInt()
+    override suspend fun getInt(key: String): Int? = getValue(key, Types.INTEGER)?.toInt()
 
     /**
      * Get a list of integer values from the storage by its key
      * @param key value's key
      * @return resulted list or null if the value has not been found
      */
-    override fun getIntList(key: String): List<Int>? =
+    override suspend fun getIntList(key: String): List<Int>? =
         getValuesList(key, Types.INTEGER)
             ?.map { it.toInt() }
 
@@ -64,14 +67,14 @@ class KeyValueStorageReaderImpl(
      * @param key value's key
      * @return resulted value or null if the value has not been found
      */
-    override fun getLong(key: String): Long? = getValue(key, Types.LONG)?.toLong()
+    override suspend fun getLong(key: String): Long? = getValue(key, Types.LONG)?.toLong()
 
     /**
      * Get a list of long integer values from the storage by its key
      * @param key value's key
      * @return resulted list or null if the value has not been found
      */
-    override fun getLongList(key: String): List<Long>? =
+    override suspend fun getLongList(key: String): List<Long>? =
         getValuesList(key, Types.LONG)
             ?.map { it.toLong() }
 
@@ -80,14 +83,14 @@ class KeyValueStorageReaderImpl(
      * @param key value's key
      * @return resulted value or null if the value has not been found
      */
-    override fun getShort(key: String): Short? = getValue(key, Types.SHORT)?.toShort()
+    override suspend fun getShort(key: String): Short? = getValue(key, Types.SHORT)?.toShort()
 
     /**
      * Get a list of short integer values from the storage by its key
      * @param key value's key
      * @return resulted list or null if the value has not been found
      */
-    override fun getShortList(key: String): List<Short>? =
+    override suspend fun getShortList(key: String): List<Short>? =
         getValuesList(key, Types.SHORT)
             ?.map { it.toShort() }
 
@@ -96,31 +99,33 @@ class KeyValueStorageReaderImpl(
      * @param key value's key
      * @return resulted value or null if the value has not been found
      */
-    override fun getString(key: String): String? = getValue(key, Types.STRING)
+    override suspend fun getString(key: String): String? = getValue(key, Types.STRING)
 
     /**
      * Get a list of strings from the storage by its key
      * @param key value's key
      * @return resulted list or null if the value has not been found
      */
-    override fun getStringList(key: String): List<String>? = getValuesList(key, Types.STRING)
+    override suspend fun getStringList(key: String): List<String>? = getValuesList(key, Types.STRING)
 
     /**
      * Checks for the existence of a value in the store
      * @param key value's key
      * @return checking result
      */
-    override fun contains(key: String): Boolean =
+    override suspend fun contains(key: String): Boolean = withContext(ioDispatcher) {
         dbQueries.readKey(key, storageKey).executeAsOneOrNull()
             ?.let { true }
             ?: false
+    }
 
-    private fun getValue(key: String, type: Short): String? =
+    private suspend fun getValue(key: String, type: Short): String? = withContext(ioDispatcher) {
         dbQueries.readCombinedList(key, storageKey).executeAsOneOrNull()
             ?.takeIf { it.type == type && it.single }
             ?.value_
+    }
 
-    private fun getValuesList(key: String, type: Short): List<String>? =
+    private suspend fun getValuesList(key: String, type: Short): List<String>? = withContext(ioDispatcher) {
         dbQueries.transactionWithResult {
             dbQueries.readKey(key, storageKey).executeAsOneOrNull()
                 ?.takeIf { !it.single && it.type == type }
@@ -128,4 +133,5 @@ class KeyValueStorageReaderImpl(
                     dbQueries.readValuesList(keyRecord.key_id).executeAsList()
                 }
         }
+    }
 }
