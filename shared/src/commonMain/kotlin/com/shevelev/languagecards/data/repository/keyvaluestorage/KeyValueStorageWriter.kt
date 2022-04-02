@@ -7,10 +7,12 @@ interface KeyValueStorageWriter {
     /**
      * Executes writing operations inside [updateAction] block with reading data opportunity
      */
-    fun updateWithRead(updateAction: (KeyValueStorageReader, KeyValueStorageWriteOperations) -> Unit)
+    suspend fun updateWithRead(
+        updateAction: suspend (KeyValueStorageReader, KeyValueStorageWriteOperations) -> Unit
+    )
 
     /**
      * Executes writing operations inside [updateAction] block
      */
-    fun update(updateAction: (KeyValueStorageWriteOperations) -> Unit)
+    suspend fun update(updateAction: suspend (KeyValueStorageWriteOperations) -> Unit)
 }

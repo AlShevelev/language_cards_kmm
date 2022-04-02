@@ -11,14 +11,14 @@ class KeyValueStorageWriterImpl(
     /**
      * Executes writing operations inside [updateAction] block with reading data opportunity
      */
-    override fun updateWithRead(
-        updateAction: (KeyValueStorageReader, KeyValueStorageWriteOperations) -> Unit
+    override suspend fun updateWithRead(
+        updateAction: suspend (KeyValueStorageReader, KeyValueStorageWriteOperations) -> Unit
     ) =
         updateAction(reader, writerOperations)
 
     /**
      * Executes writing operations inside [updateAction] block
      */
-    override fun update(updateAction: (KeyValueStorageWriteOperations) -> Unit) =
+    override suspend fun update(updateAction: suspend (KeyValueStorageWriteOperations) -> Unit) =
         updateAction(writerOperations)
 }

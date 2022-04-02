@@ -1,4 +1,4 @@
-package com.shevelev.languagecards.domain.interactors.synccards.batches
+package com.shevelev.languagecards.domain.interactors.updatecardsstorage.batches
 
 import com.shevelev.languagecards.data.repository.cards.CardsRepository
 import com.shevelev.languagecards.domain.model.card.Card
